@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신신사 이메일 서명 생성기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f3f4f6; }
+        .preview-container { background: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .sig-font { font-family: 'Malgun Gothic', '맑은 고딕', sans-serif; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-6xl mx-auto">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-black text-gray-800">신신사 이메일 서명 생성기</h1>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- 입력 폼 섹션 -->
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-xl font-bold mb-4 border-b pb-2 text-red-600">개인 정보 입력</h2>
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">이름 (한글)</label>
+                            <input type="text" id="in_name_ko" value="강 슬 기" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">이름 (영문)</label>
+                            <input type="text" id="in_name_en" value="KANG SEUL KI" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">부서 및 직급 (한글) - 괄호 포함 수정 가능</label>
+                        <input type="text" id="in_dept_ko" value="(원가실 / Global ERP 운영팀 / 책임)" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">부서 및 직급 (영문) - 괄호 포함 수정 가능</label>
+                        <input type="text" id="in_dept_en" value="(Global ERP Operations Team / Senior Manager)" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Mobile</label>
+                            <input type="text" id="in_mobile" value="010-2953-5205" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">E-mail</label>
+                            <input type="email" id="in_email" value="seulki.kang@shinshinsa.com" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">주소</label>
+                        <input type="text" id="in_address" value="경상남도 창원시 성산구 성주로97번길 34 (우편 51538)" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">TEL</label>
+                            <input type="text" id="in_tel" value="(055) 337-2475~9" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">FAX</label>
+                            <input type="text" id="in_fax" value="(055) 337-2480~1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border">
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">상단 회색 바 너비 (100%, 600px 등 자유롭게 조절)</label>
+                        <input type="text" id="in_bar_width" value="100%" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border" placeholder="예: 100% 또는 600px">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 결과물 미리보기 섹션 -->
+            <div class="flex flex-col space-y-4">
+                <div class="bg-gray-100 p-2 rounded text-sm text-gray-500 font-mono">실시간 미리보기</div>
+                <div id="capture_area" class="preview-container p-4 bg-white overflow-auto border min-h-[350px]">
+                    <!-- 복사될 실제 서명 HTML 영역 시작 -->
+                    <div id="signature_preview">
+                        <!-- 배경색만 사용하는 두께감 있는 실선 바 -->
+                        <div id="grey_bar_container" style="width: 100%; margin: 10px 0 20px 0;">
+                            <div id="grey_bar_solid" style="width: 100%; height: 4px; background-color: #dbdbdb; border: none !important; line-height: 1px; font-size: 1px;">&nbsp;</div>
+                        </div>
+                        
+                        <div style="width: 450px; font-family: 'Malgun Gothic', '맑은 고딕', sans-serif; color: #333; background-color: #ffffff; font-size: 10pt; line-height: 150%;">
+                            <!-- 로고 이미지 -->
+                            <div style="padding: 0 0 15px 0; text-align: center;">
+                                <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2F8832h%2FbtsMP3vBEVG%2FAAAAAAAAAAAAAAAAAAAAAGUyColkYBhG_Wi6jIB1FXT_coSeJ-lZ-A5-PdHF9Qib%2Fimg.png%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1772290799%26allow_ip%3D%26allow_referer%3D%26signature%3DXtQL%252BTPcIgD9lS5P217cyG%252BsAI8%253D" 
+                                     alt="신신사 로고" style="max-height: 48px; width: auto; display: inline-block;">
+                            </div>
+
+                            <!-- 레드 바 -->
+                            <div style="background-color: #e30613; height: 22px; width: 100%; display: table; text-align: center;">
+                                <div style="display: table-cell; vertical-align: middle;">
+                                    <a href="http://www.shinshinsa.com" style="color: #ffffff; text-decoration: none; font-size: 11px; font-weight: bold; letter-spacing: 0.5px;">www.shinshinsa.com</a>
+                                </div>
+                            </div>
+
+                            <!-- 정보 영역 -->
+                            <div style="padding: 20px 25px;">
+                                <div style="margin-bottom: 12px;">
+                                    <span id="out_name_ko" style="font-size: 24px; font-weight: 800; letter-spacing: 4px; margin-right: 15px;">강 슬 기</span>
+                                    <span id="out_dept_ko" style="font-size: 15px; font-weight: bold; color: #000;">(원가실 / Global ERP 운영팀 / 책임)</span>
+                                </div>
+                                
+                                <div style="margin-bottom: 15px;">
+                                    <span id="out_name_en" style="font-size: 13px; font-weight: 900; color: #000; margin-right: 10px;">KANG SEUL KI</span>
+                                    <span id="out_dept_en" style="font-size: 12px; font-weight: bold; color: #000;">(Global ERP Operations Team / Senior Manager)</span>
+                                </div>
+
+                                <div style="font-size: 13px; line-height: 1.6; color: #444;">
+                                    <div>
+                                        <span style="color: #666;">Mobile :</span> <span id="out_mobile" style="color: #4b63ff;">010-2953-5205</span>
+                                        <span style="margin: 0 8px; color: #ccc;">|</span>
+                                        <span style="color: #666;">E-mail :</span> <a id="out_email_link" href="mailto:seulki.kang@shinshinsa.com" style="color: #4b63ff; text-decoration: none;"><span id="out_email">seulki.kang@shinshinsa.com</span></a>
+                                    </div>
+                                    <div>
+                                        주소 : <span id="out_address">경상남도 창원시 성산구 성주로97번길 34 (우편 51538)</span>
+                                    </div>
+                                    <div>
+                                        TEL : <span id="out_tel">(055) 337-2475~9</span> <span style="margin: 0 8px; color: #ccc;">|</span> FAX : <span id="out_fax">(055) 337-2480~1</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 실제 서명 HTML 영역 끝 -->
+                </div>
+
+                <div class="flex space-x-2">
+                    <button id="btn_copy" onclick="copyCodeToClipboard()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded transition duration-200">
+                        서명 코드(HTML) 복사하기
+                    </button>
+                    <button onclick="resetForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-6 rounded transition duration-200">
+                        초기화
+                    </button>
+                </div>
+                <p id="msg" class="text-center text-sm font-bold h-4 text-green-600 mt-2"></p>
+            </div>
+        </div>
+
+        <footer class="mt-12 text-center text-gray-400 text-xs">
+            &copy; 2026 SHINSHINSA. All rights reserved.
+        </footer>
+    </div>
+
+    <script>
+        const inputs = [
+            'name_ko', 'name_en', 'dept_ko', 'dept_en', 
+            'mobile', 'email', 'address', 'tel', 'fax', 'bar_width'
+        ];
+
+        function updatePreview() {
+            inputs.forEach(id => {
+                const inputEl = document.getElementById('in_' + id);
+                if (!inputEl) return;
+                const val = inputEl.value;
+                const out = document.getElementById('out_' + id);
+                
+                // 띄어쓰기 유지를 위해 일반 공백을 특수 공백문자(\u00A0)로 변환
+                const formattedVal = val.replace(/ /g, '\u00A0');
+                
+                if (id === 'bar_width') {
+                    const container = document.getElementById('grey_bar_container');
+                    const bar = document.getElementById('grey_bar_solid');
+                    container.style.width = val;
+                    bar.style.width = '100%';
+                } else if (id === 'email') {
+                    if(out) out.innerText = val;
+                    const link = document.getElementById('out_email_link');
+                    if(link) link.href = 'mailto:' + val;
+                } else {
+                    if (out) out.innerText = formattedVal;
+                }
+            });
+        }
+
+        inputs.forEach(id => {
+            const el = document.getElementById('in_' + id);
+            if(el) el.addEventListener('input', updatePreview);
+        });
+
+        function copyCodeToClipboard() {
+            const htmlCode = document.getElementById('signature_preview').innerHTML;
+            const textarea = document.createElement('textarea');
+            textarea.value = htmlCode.trim();
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showMsg('서명 HTML 코드가 복사되었습니다!');
+                } else {
+                    showMsg('복사에 실패했습니다.');
+                }
+            } catch (err) {
+                showMsg('에러가 발생했습니다.');
+            }
+            
+            document.body.removeChild(textarea);
+        }
+
+        function showMsg(text) {
+            const msg = document.getElementById('msg');
+            msg.innerText = text;
+            setTimeout(() => { msg.innerText = ''; }, 3000);
+        }
+
+        function resetForm() {
+            if(confirm('모든 입력 내용을 초기화할까요?')) {
+                location.reload();
+            }
+        }
+
+        window.onload = updatePreview;
+    </script>
+</body>
+</html>
