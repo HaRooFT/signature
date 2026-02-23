@@ -5,16 +5,113 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>신신사 이메일 서명 생성기</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Configuration (환경 변수 사용)
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        // 전역 상태 변수
+        let currentUser = null;
+
+        // 초기화 및 인증 로직
+        const initApp = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("인증 실패:", error);
+            }
+        };
+
+        // 인증 상태 변경 감지
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                loadSavedData(); // 로그인 성공 시 데이터 로드
+            }
+        });
+
+        // 데이터 로드 함수
+        async function loadSavedData() {
+            if (!currentUser) return;
+            
+            const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'settings', 'profile');
+            try {
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    // 입력 폼에 값 채우기
+                    Object.keys(data).forEach(key => {
+                        const inputEl = document.getElementById('in_' + key);
+                        if (inputEl) {
+                            inputEl.value = data[key];
+                        }
+                    });
+                    // 미리보기 업데이트
+                    window.updatePreview();
+                    showMsg("저장된 정보를 불러왔습니다.");
+                }
+            } catch (error) {
+                console.error("데이터 로드 에러:", error);
+            }
+        }
+
+        // 데이터 저장 함수
+        window.saveData = async function() {
+            if (!currentUser) {
+                showMsg("사용자 인증 중입니다. 잠시 후 다시 시도해주세요.", "error");
+                return;
+            }
+
+            const dataToSave = {};
+            const inputs = [
+                'name_ko', 'name_en', 'dept_ko', 'dept_en', 
+                'mobile', 'email', 'address', 'tel', 'fax', 
+                'bar_width', 'body_width', 'grey_bar_height', 'top_gap', 'logo_height', 'section_gap'
+            ];
+
+            inputs.forEach(id => {
+                const el = document.getElementById('in_' + id);
+                if (el) dataToSave[id] = el.value;
+            });
+
+            const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'settings', 'profile');
+            
+            try {
+                await setDoc(docRef, dataToSave);
+                showMsg("정보가 안전하게 저장되었습니다.");
+            } catch (error) {
+                console.error("저장 에러:", error);
+                showMsg("저장 중 오류가 발생했습니다.", "error");
+            }
+        };
+
+        window.onload = () => {
+            initApp();
+            window.updatePreview();
+        };
+
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
         body { font-family: 'Noto Sans KR', sans-serif; background-color: #f3f4f6; }
         .preview-container { background: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
         .sig-font { font-family: 'Malgun Gothic', '맑은 고딕', sans-serif; }
         
-        /* 실시간 강조 효과용 스타일 */
         .highlight-active {
-            outline: 3px solid #facc15 !important; /* 노란색 테두리 */
-            background-color: rgba(254, 240, 138, 0.3) !important; /* 연노란색 배경 */
+            outline: 3px solid #facc15 !important;
+            background-color: rgba(254, 240, 138, 0.3) !important;
             border-radius: 4px;
             transition: all 0.2s ease-in-out;
             z-index: 10;
@@ -25,12 +122,16 @@
     <div class="max-w-6xl mx-auto">
         <header class="mb-8 text-center">
             <h1 class="text-3xl font-black text-gray-800">신신사 이메일 서명 생성기</h1>
+            <p class="text-sm text-gray-500 mt-2">입력한 정보는 '저장하기'를 통해 다음 접속 시에도 유지할 수 있습니다.</p>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- 입력 폼 섹션 -->
             <div class="bg-white p-6 rounded-lg shadow-sm">
-                <h2 class="text-xl font-bold mb-4 border-b pb-2 text-red-600">개인 정보 입력</h2>
+                <h2 class="text-xl font-bold mb-4 border-b pb-2 text-red-600 flex justify-between items-center">
+                    개인 정보 입력
+                    <button onclick="saveData()" class="text-sm bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded shadow-sm transition">정보 저장하기</button>
+                </h2>
                 <div class="space-y-4">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
@@ -83,7 +184,7 @@
                     <h2 class="text-xl font-bold mt-6 mb-4 border-b pb-2 text-blue-600">디자인 상세 설정</h2>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">회색 바 너비 (기본 100%)</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">회색 바 너비</label>
                             <input type="text" id="in_bar_width" value="100%" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border">
                         </div>
                         <div>
@@ -98,7 +199,7 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">레드바 하단 간격</label>
-                            <input type="text" id="in_top_gap" value="20px" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border" placeholder="예: 20px">
+                            <input type="text" id="in_top_gap" value="20px" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
@@ -108,7 +209,7 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">정보 섹션 간격</label>
-                            <input type="text" id="in_section_gap" value="15px" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border" placeholder="예: 15px">
+                            <input type="text" id="in_section_gap" value="15px" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border">
                         </div>
                     </div>
                 </div>
@@ -118,7 +219,6 @@
             <div class="flex flex-col space-y-4">
                 <div class="bg-gray-100 p-2 rounded text-sm text-gray-500 font-mono">실시간 미리보기</div>
                 <div id="capture_area" class="preview-container p-4 bg-white overflow-auto border min-h-[400px]">
-                    <!-- 복사될 실제 서명 HTML 영역 시작 -->
                     <div id="signature_preview">
                         <!-- 본문 컨테이너 -->
                         <div id="sig_body" style="width: 450px; font-family: 'Malgun Gothic', '맑은 고딕', sans-serif; color: #333; background-color: #ffffff; font-size: 10pt; line-height: 150%; margin: 0 auto;">
@@ -134,7 +234,6 @@
                                      alt="신신사 로고" style="max-height: 48px; width: auto; display: inline-block;">
                             </div>
 
-                            <!-- [수정] 레드바 하단 간격 하이라이트 타겟 그룹 (레드바 ~ 국문이름/소속) -->
                             <div id="out_top_highlight_target">
                                 <!-- 레드 바 (22px 고정) -->
                                 <div id="red_bar" style="background-color: #e30613; height: 22px; width: 100%; display: table; text-align: center; border: none !important;">
@@ -143,7 +242,7 @@
                                     </div>
                                 </div>
 
-                                <!-- 국문 성명 섹션 (상단 패딩이 레드바 하단 간격 역할을 함) -->
+                                <!-- 국문 성명 섹션 -->
                                 <div id="out_name_ko_container" style="padding: 20px 25px 0 25px;">
                                     <div style="margin-bottom: 12px;">
                                         <span id="out_name_ko" style="font-size: 24px; font-weight: 800; letter-spacing: 4px; margin-right: 15px; display: inline-block;">강 슬 기</span>
@@ -152,9 +251,7 @@
                                 </div>
                             </div>
 
-                            <!-- 나머지 정보 영역 -->
                             <div id="out_lower_info_container" style="padding: 0 25px 20px 25px;">
-                                <!-- 정보 섹션 간격 조절 그룹 -->
                                 <div id="out_gap_highlight_group">
                                     <div id="out_section_gap" style="margin-bottom: 15px;">
                                         <span id="out_name_en" style="font-size: 13px; font-weight: 900; color: #000; margin-right: 10px; display: inline-block;">KANG SEUL KI</span>
@@ -181,7 +278,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- 실제 서명 HTML 영역 끝 -->
                 </div>
 
                 <div class="flex space-x-2">
@@ -192,7 +288,7 @@
                         초기화
                     </button>
                 </div>
-                <p id="msg" class="text-center text-sm font-bold h-4 text-green-600 mt-2"></p>
+                <p id="msg" class="text-center text-sm font-bold h-4 mt-2"></p>
             </div>
         </div>
 
@@ -208,7 +304,6 @@
             'bar_width', 'body_width', 'grey_bar_height', 'top_gap', 'logo_height', 'section_gap'
         ];
 
-        // 입력값과 미리보기 요소 간의 매핑 정의
         const map = {
             'bar_width': 'grey_bar_container',
             'body_width': 'sig_body',
@@ -217,12 +312,12 @@
             'fax': 'out_tel_fax_container',
             'email': 'out_email',
             'grey_bar_height': 'grey_bar_solid',
-            'top_gap': 'out_top_highlight_target', // [수정] 하이라이트 범위를 레드바 포함 그룹으로 변경
+            'top_gap': 'out_top_highlight_target',
             'logo_height': 'out_logo_img',
             'section_gap': 'out_gap_highlight_group'
         };
 
-        function updatePreview() {
+        window.updatePreview = function() {
             inputs.forEach(id => {
                 const inputEl = document.getElementById('in_' + id);
                 if (!inputEl) return;
@@ -243,7 +338,6 @@
                     const bar = document.getElementById('grey_bar_solid');
                     bar.style.height = val;
                 } else if (id === 'top_gap') {
-                    // [수정] 패딩 조절 대상을 성명 컨테이너로 지정
                     const info = document.getElementById('out_name_ko_container');
                     info.style.paddingTop = val;
                 } else if (id === 'logo_height') {
@@ -299,28 +393,27 @@
                 if (successful) {
                     showMsg('서명 HTML 코드가 복사되었습니다!');
                 } else {
-                    showMsg('복사에 실패했습니다.');
+                    showMsg('복사에 실패했습니다.', 'error');
                 }
             } catch (err) {
-                showMsg('에러가 발생했습니다.');
+                showMsg('에러가 발생했습니다.', 'error');
             }
             
             document.body.removeChild(textarea);
         }
 
-        function showMsg(text) {
+        function showMsg(text, type = 'success') {
             const msg = document.getElementById('msg');
             msg.innerText = text;
+            msg.className = `text-center text-sm font-bold h-4 mt-2 ${type === 'success' ? 'text-green-600' : 'text-red-600'}`;
             setTimeout(() => { msg.innerText = ''; }, 3000);
         }
 
         function resetForm() {
-            if(confirm('모든 입력 내용을 초기화할까요?')) {
+            if(confirm('모든 입력 내용을 초기화할까요? (저장된 정보는 삭제되지 않습니다)')) {
                 location.reload();
             }
         }
-
-        window.onload = updatePreview;
     </script>
 </body>
 </html>
