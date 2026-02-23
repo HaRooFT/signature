@@ -7,15 +7,16 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
-        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f3f4f6; scroll-behavior: smooth; }
-        .preview-container { background: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); scroll-behavior: smooth; }
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f3f4f6; }
+        .preview-container { background: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .sig-font { font-family: 'Malgun Gothic', '맑은 고딕', sans-serif; }
         
         /* 실시간 강조 효과용 스타일 */
         .highlight-active {
-            outline: 3px solid #facc15 !important;
-            background-color: rgba(254, 240, 138, 0.4) !important;
+            outline: 3px solid #facc15 !important; /* 노란색 테두리 */
+            background-color: rgba(254, 240, 138, 0.3) !important; /* 연노란색 배경 */
             border-radius: 4px;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease-in-out;
             z-index: 10;
         }
     </style>
@@ -24,87 +25,93 @@
     <div class="max-w-6xl mx-auto">
         <header class="mb-8 text-center">
             <h1 class="text-3xl font-black text-gray-800">신신사 이메일 서명 생성기</h1>
-            <p class="text-sm text-gray-500 mt-2">입력한 정보는 브라우저 로컬 저장소에 저장되어 다음에 다시 볼 수 있습니다.</p>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- 입력 폼 섹션 -->
-            <div class="bg-white p-6 rounded-lg shadow-sm h-fit">
-                <h2 class="text-xl font-bold mb-4 border-b pb-2 text-red-600 flex justify-between items-center">
-                    개인 정보 입력
-                    <button onclick="saveToLocal()" class="text-sm bg-blue-600 hover:bg-blue-700 text-white py-1.5 px-4 rounded-full shadow-md transition transform active:scale-95">정보 저장하기</button>
-                </h2>
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <div class="flex justify-between items-center mb-4 border-b pb-2">
+                    <h2 class="text-xl font-bold text-red-600">개인 정보 입력</h2>
+                    <button onclick="saveToLocal()" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 rounded shadow transition">정보 저장하기</button>
+                </div>
                 <div class="space-y-4">
-                    <!-- 기본 정보 입력 그리드 -->
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase">이름 (한글)</label>
+                            <label class="block text-sm font-medium text-gray-700">이름 (한글)</label>
                             <input type="text" id="in_name_ko" value="강 슬 기" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase">이름 (영문)</label>
+                            <label class="block text-sm font-medium text-gray-700">이름 (영문)</label>
                             <input type="text" id="in_name_en" value="KANG SEUL KI" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border">
                         </div>
                     </div>
+
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase">부서 및 직급 (한글)</label>
+                        <label class="block text-sm font-medium text-gray-700">부서 및 직급 (한글)</label>
                         <input type="text" id="in_dept_ko" value="(원가실 / Global ERP 운영팀 / 책임)" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border">
                     </div>
+
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase">부서 및 직급 (영문)</label>
+                        <label class="block text-sm font-medium text-gray-700">부서 및 직급 (영문)</label>
                         <input type="text" id="in_dept_en" value="(Global ERP Operations Team / Senior Manager)" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border">
                     </div>
+
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase">Mobile</label>
+                            <label class="block text-sm font-medium text-gray-700">Mobile</label>
                             <input type="text" id="in_mobile" value="010-2953-5205" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase">E-mail</label>
+                            <label class="block text-sm font-medium text-gray-700">E-mail</label>
                             <input type="email" id="in_email" value="seulki.kang@shinshinsa.com" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border">
                         </div>
                     </div>
+
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase">주소</label>
+                        <label class="block text-sm font-medium text-gray-700">주소</label>
                         <input type="text" id="in_address" value="경상남도 창원시 성산구 성주로97번길 34 (우편 51538)" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border">
                     </div>
+
                     <div class="grid grid-cols-2 gap-4 border-b pb-4">
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase">TEL</label>
+                            <label class="block text-sm font-medium text-gray-700">TEL</label>
                             <input type="text" id="in_tel" value="(055) 337-2475~9" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase">FAX</label>
+                            <label class="block text-sm font-medium text-gray-700">FAX</label>
                             <input type="text" id="in_fax" value="(055) 337-2480~1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 p-2 border">
                         </div>
                     </div>
 
-                    <!-- 디자인 상세 설정: 이미지와 동일한 UI -->
-                    <h2 class="text-xl font-bold mt-8 mb-4 border-b pb-2 text-blue-600">디자인 상세 설정</h2>
+                    <h2 class="text-xl font-bold mt-6 mb-4 border-b pb-2 text-blue-600">디자인 상세 설정</h2>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase">회색 바 너비</label>
-                            <input type="text" id="in_bar_width" value="100%" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border text-sm">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">회색 바 너비 (기본 100%)</label>
+                            <input type="text" id="in_bar_width" value="100%" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase">회색 바 높이</label>
-                            <input type="text" id="in_grey_bar_height" value="2px" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border text-sm">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">회색 바 높이</label>
+                            <input type="text" id="in_grey_bar_height" value="2px" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">레드바(본문) 너비</label>
+                            <input type="text" id="in_body_width" value="450px" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase">레드바(본문) 너비</label>
-                            <input type="text" id="in_body_width" value="450px" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border text-sm">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">레드바 하단 간격</label>
+                            <input type="text" id="in_top_gap" value="20px" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border" placeholder="예: 20px">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">로고 이미지 크기</label>
+                            <input type="text" id="in_logo_height" value="48px" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase">레드바 하단 간격</label>
-                            <input type="text" id="in_top_gap" value="20px" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase">로고 이미지 크기</label>
-                            <input type="text" id="in_logo_height" value="48px" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase">정보 섹션 간격</label>
-                            <input type="text" id="in_section_gap" value="15px" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border text-sm">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">정보 섹션 간격</label>
+                            <input type="text" id="in_section_gap" value="15px" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border" placeholder="예: 15px">
                         </div>
                     </div>
                 </div>
@@ -112,32 +119,33 @@
 
             <!-- 결과물 미리보기 섹션 -->
             <div class="flex flex-col space-y-4">
-                <div class="bg-gray-800 text-white p-2 rounded text-xs font-mono flex justify-between items-center">
-                    <span>실시간 미리보기</span>
-                    <span id="scroll-status" class="text-yellow-400 font-bold"></span>
-                </div>
-                <div id="capture_area" class="preview-container p-8 bg-white overflow-y-auto border border-gray-200 h-[650px]">
+                <div class="bg-gray-100 p-2 rounded text-sm text-gray-500 font-mono">실시간 미리보기</div>
+                <div id="capture_area" class="preview-container p-4 bg-white overflow-auto border min-h-[400px]">
+                    <!-- 복사될 실제 서명 HTML 영역 시작 -->
                     <div id="signature_preview">
-                        <div id="sig_body" style="width: 450px; font-family: 'Malgun Gothic', '맑은 고딕', sans-serif; color: #333; background-color: #ffffff; font-size: 10pt; line-height: 150%; margin: 0 auto; padding-bottom: 80px;">
+                        <!-- 본문 컨테이너 -->
+                        <div id="sig_body" style="width: 450px; font-family: 'Malgun Gothic', '맑은 고딕', sans-serif; color: #333; background-color: #ffffff; font-size: 10pt; line-height: 150%; margin: 0 auto;">
                             
-                            <!-- 회색 바 영역 -->
+                            <!-- 회색 실선 바 -->
                             <div id="grey_bar_container" style="width: 100%; margin: 10px 0 20px 0;">
-                                <div id="grey_bar_solid" style="width: 100%; height: 2px; background-color: #dbdbdb; line-height: 1px; font-size: 1px;">&nbsp;</div>
+                                <div id="grey_bar_solid" style="width: 100%; height: 2px; background-color: #dbdbdb; border: none !important; line-height: 1px; font-size: 1px;">&nbsp;</div>
                             </div>
 
-                            <!-- 로고 영역 -->
+                            <!-- 로고 이미지 -->
                             <div id="out_logo_container" style="padding: 0 0 15px 0; text-align: center;">
                                 <img id="out_logo_img" src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2F8832h%2FbtsMP3vBEVG%2FAAAAAAAAAAAAAAAAAAAAAGUyColkYBhG_Wi6jIB1FXT_coSeJ-lZ-A5-PdHF9Qib%2Fimg.png%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1772290799%26allow_ip%3D%26allow_referer%3D%26signature%3DXtQL%252BTPcIgD9lS5P217cyG%252BsAI8%253D" 
                                      alt="신신사 로고" style="max-height: 48px; width: auto; display: inline-block;">
                             </div>
 
-                            <!-- 성명 및 소속 영역 -->
                             <div id="out_top_highlight_target">
-                                <div id="red_bar" style="background-color: #e30613; height: 22px; width: 100%; display: table; text-align: center;">
+                                <!-- 레드 바 (22px 고정) -->
+                                <div id="red_bar" style="background-color: #e30613; height: 22px; width: 100%; display: table; text-align: center; border: none !important;">
                                     <div style="display: table-cell; vertical-align: middle;">
                                         <a href="http://www.shinshinsa.com" style="color: #ffffff; text-decoration: none; font-size: 11px; font-weight: bold; letter-spacing: 0.5px;">www.shinshinsa.com</a>
                                     </div>
                                 </div>
+
+                                <!-- 국문 성명 섹션 -->
                                 <div id="out_name_ko_container" style="padding: 20px 25px 0 25px;">
                                     <div style="margin-bottom: 12px;">
                                         <span id="out_name_ko" style="font-size: 24px; font-weight: 800; letter-spacing: 4px; margin-right: 15px; display: inline-block;">강 슬 기</span>
@@ -146,14 +154,15 @@
                                 </div>
                             </div>
 
-                            <!-- 하단 상세 정보 영역 -->
+                            <!-- 나머지 정보 영역 -->
                             <div id="out_lower_info_container" style="padding: 0 25px 20px 25px;">
                                 <div id="out_gap_highlight_group">
                                     <div id="out_section_gap" style="margin-bottom: 15px;">
                                         <span id="out_name_en" style="font-size: 13px; font-weight: 900; color: #000; margin-right: 10px; display: inline-block;">KANG SEUL KI</span>
                                         <span id="out_dept_en" style="font-size: 12px; font-weight: bold; color: #000; display: inline-block;">(Global ERP Operations Team / Senior Manager)</span>
                                     </div>
-                                    <div id="out_contact_container" style="font-size: 13px; line-height: 1.6; color: #444;">
+
+                                    <div style="font-size: 13px; line-height: 1.6; color: #444;">
                                         <div>
                                             <span style="color: #666;">Mobile :</span> <span id="out_mobile" style="color: #4b63ff;">010-2953-5205</span>
                                             <span style="margin: 0 8px; color: #ccc;">|</span>
@@ -161,7 +170,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div style="font-size: 13px; line-height: 1.6; color: #444; margin-top: 5px;">
+
+                                <div style="font-size: 13px; line-height: 1.6; color: #444;">
                                     <div id="out_address_container">
                                         주소 : <span id="out_address">경상남도 창원시 성산구 성주로97번길 34 (우편 51538)</span>
                                     </div>
@@ -175,14 +185,14 @@
                 </div>
 
                 <div class="flex space-x-2">
-                    <button onclick="copyCodeToClipboard()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded shadow-lg transition active:scale-95">
-                        서명 HTML 코드 복사
+                    <button id="btn_copy" onclick="copyCodeToClipboard()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded transition duration-200">
+                        서명 코드(HTML) 복사하기
                     </button>
-                    <button onclick="resetForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-6 rounded transition">
+                    <button onclick="resetForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-6 rounded transition duration-200">
                         초기화
                     </button>
                 </div>
-                <p id="msg" class="text-center text-sm font-bold h-4 mt-2"></p>
+                <p id="msg" class="text-center text-sm font-bold h-4 text-green-600 mt-2"></p>
             </div>
         </div>
 
@@ -193,7 +203,8 @@
 
     <script>
         const inputs = [
-            'name_ko', 'name_en', 'dept_ko', 'dept_en', 'mobile', 'email', 'address', 'tel', 'fax', 
+            'name_ko', 'name_en', 'dept_ko', 'dept_en', 
+            'mobile', 'email', 'address', 'tel', 'fax', 
             'bar_width', 'body_width', 'grey_bar_height', 'top_gap', 'logo_height', 'section_gap'
         ];
 
@@ -203,81 +214,86 @@
             'address': 'out_address_container',
             'tel': 'out_tel_fax_container',
             'fax': 'out_tel_fax_container',
-            'mobile': 'out_contact_container',
-            'email': 'out_contact_container',
+            'email': 'out_email',
             'grey_bar_height': 'grey_bar_solid',
             'top_gap': 'out_top_highlight_target',
             'logo_height': 'out_logo_img',
             'section_gap': 'out_gap_highlight_group'
         };
 
-        // 로컬 저장소에 데이터 저장
-        window.saveToLocal = function() {
+        // [추가] 로컬 저장소에 정보 저장하는 함수
+        function saveToLocal() {
             const data = {};
             inputs.forEach(id => {
                 const el = document.getElementById('in_' + id);
                 if (el) data[id] = el.value;
             });
-            localStorage.setItem('shinshinsa_signature_data', JSON.stringify(data));
+            localStorage.setItem('shinshinsa_saved_profile', JSON.stringify(data));
             showMsg('정보가 브라우저에 저장되었습니다!');
-        };
+        }
 
-        // 로컬 저장소에서 데이터 불러오기
-        window.loadFromLocal = function() {
-            const savedData = localStorage.getItem('shinshinsa_signature_data');
-            if (savedData) {
-                const data = JSON.parse(savedData);
+        // [추가] 저장된 정보를 불러오는 함수
+        function loadFromLocal() {
+            const saved = localStorage.getItem('shinshinsa_saved_profile');
+            if (saved) {
+                const data = JSON.parse(saved);
                 Object.keys(data).forEach(key => {
                     const el = document.getElementById('in_' + key);
                     if (el) el.value = data[key];
                 });
-                window.updatePreview();
-                showMsg('이전에 작성한 정보를 불러왔습니다.');
+                updatePreview();
+                showMsg('저장된 정보를 불러왔습니다.');
             }
-        };
+        }
 
-        window.updatePreview = function() {
+        function updatePreview() {
             inputs.forEach(id => {
                 const inputEl = document.getElementById('in_' + id);
                 if (!inputEl) return;
                 const val = inputEl.value;
                 const out = document.getElementById('out_' + id);
+                
                 const formattedVal = val.replace(/ /g, '\u00A0');
                 
                 if (id === 'bar_width') {
-                    document.getElementById('grey_bar_container').style.width = val;
+                    const container = document.getElementById('grey_bar_container');
+                    const bar = document.getElementById('grey_bar_solid');
+                    container.style.width = val;
+                    bar.style.width = '100%';
                 } else if (id === 'body_width') {
-                    document.getElementById('sig_body').style.width = val;
+                    const body = document.getElementById('sig_body');
+                    body.style.width = val;
                 } else if (id === 'grey_bar_height') {
-                    document.getElementById('grey_bar_solid').style.height = val;
+                    const bar = document.getElementById('grey_bar_solid');
+                    bar.style.height = val;
                 } else if (id === 'top_gap') {
-                    document.getElementById('out_name_ko_container').style.paddingTop = val;
+                    const info = document.getElementById('out_name_ko_container');
+                    info.style.paddingTop = val;
                 } else if (id === 'logo_height') {
-                    document.getElementById('out_logo_img').style.maxHeight = val;
+                    const img = document.getElementById('out_logo_img');
+                    img.style.maxHeight = val;
                 } else if (id === 'section_gap') {
-                    document.getElementById('out_section_gap').style.marginBottom = val;
+                    const gapEl = document.getElementById('out_section_gap');
+                    gapEl.style.marginBottom = val;
                 } else if (id === 'email') {
                     if(out) out.innerText = val;
-                    document.getElementById('out_email_link').href = 'mailto:' + val;
+                    const link = document.getElementById('out_email_link');
+                    if(link) link.href = 'mailto:' + val;
                 } else {
                     if (out) out.innerText = formattedVal;
                 }
             });
         }
 
-        function highlightAndScroll(inputId, isActive) {
+        function highlightPreview(inputId, isActive) {
             const previewId = map[inputId] || 'out_' + inputId;
             const target = document.getElementById(previewId);
-            const status = document.getElementById('scroll-status');
             
             if (target) {
                 if (isActive) {
                     target.classList.add('highlight-active');
-                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    status.innerText = "▶ " + inputId.toUpperCase();
                 } else {
                     target.classList.remove('highlight-active');
-                    status.innerText = "";
                 }
             }
         }
@@ -285,9 +301,9 @@
         inputs.forEach(id => {
             const el = document.getElementById('in_' + id);
             if(el) {
-                el.addEventListener('input', window.updatePreview);
-                el.addEventListener('focus', () => highlightAndScroll(id, true));
-                el.addEventListener('blur', () => highlightAndScroll(id, false));
+                el.addEventListener('input', updatePreview);
+                el.addEventListener('focus', () => highlightPreview(id, true));
+                el.addEventListener('blur', () => highlightPreview(id, false));
             }
         });
 
@@ -300,28 +316,37 @@
             textarea.value = htmlCode.trim();
             document.body.appendChild(textarea);
             textarea.select();
-            document.execCommand('copy');
-            showMsg('코드가 복사되었습니다! 메일 설정에 붙여넣으세요.');
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showMsg('서명 HTML 코드가 복사되었습니다!');
+                } else {
+                    showMsg('복사에 실패했습니다.');
+                }
+            } catch (err) {
+                showMsg('에러가 발생했습니다.');
+            }
+            
             document.body.removeChild(textarea);
         }
 
-        function showMsg(text, type = 'success') {
+        function showMsg(text) {
             const msg = document.getElementById('msg');
             msg.innerText = text;
-            msg.className = `text-center text-sm font-bold h-4 mt-2 ${type === 'success' ? 'text-green-600' : 'text-red-600'}`;
             setTimeout(() => { msg.innerText = ''; }, 3000);
         }
 
         function resetForm() {
-            if(confirm('모든 내용을 초기화하시겠습니까? (저장된 정보도 사라집니다)')) {
-                localStorage.removeItem('shinshinsa_signature_data');
+            if(confirm('내용을 초기화할까요? (저장된 정보는 사라지지 않습니다)')) {
                 location.reload();
             }
         }
 
+        // 페이지 로드 시 정보 불러오기 실행
         window.onload = function() {
-            window.loadFromLocal();
-            window.updatePreview();
+            loadFromLocal();
+            updatePreview();
         };
     </script>
 </body>
