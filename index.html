@@ -37,11 +37,11 @@
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-            <!-- 입력 폼 섹션 (상대적으로 길어질 수 있는 영역) -->
+            <!-- 입력 폼 섹션 -->
             <div class="bg-white p-6 rounded-lg shadow-sm">
                 <div class="flex justify-between items-center mb-4 border-b pb-2">
                     <h2 class="text-xl font-bold text-red-600">개인 정보 입력</h2>
-                    <button onclick="saveToLocal()" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 rounded shadow transition transform active:scale-95">정보 저장하기</button>
+                    <button onclick="saveToLocal()" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1.5 px-4 rounded shadow transition transform active:scale-95">정보 저장하기</button>
                 </div>
                 <div class="space-y-4">
                     <div class="grid grid-cols-2 gap-4">
@@ -92,48 +92,43 @@
                         </div>
                     </div>
 
-                    <h2 class="text-xl font-bold mt-6 mb-4 border-b pb-2 text-blue-600">디자인 상세 설정</h2>
+                    <h2 class="text-xl font-bold mt-8 mb-4 border-b pb-2 text-blue-600">디자인 상세 설정</h2>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">회색 바 너비 (기본 100%)</label>
-                            <input type="text" id="in_bar_width" value="100%" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border">
+                            <label class="block text-xs font-bold text-gray-500 uppercase">회색 바 너비</label>
+                            <input type="text" id="in_bar_width" value="100%" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">회색 바 높이</label>
-                            <input type="text" id="in_grey_bar_height" value="2px" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">레드바(본문) 너비</label>
-                            <input type="text" id="in_body_width" value="450px" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border">
+                            <label class="block text-xs font-bold text-gray-500 uppercase">회색 바 높이</label>
+                            <input type="text" id="in_grey_bar_height" value="2px" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">레드바 하단 간격</label>
-                            <input type="text" id="in_top_gap" value="10px" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border" placeholder="예: 20px">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4 pb-12">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">로고 이미지 크기</label>
-                            <input type="text" id="in_logo_height" value="48px" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border">
+                            <label class="block text-xs font-bold text-gray-500 uppercase">레드바(본문) 너비</label>
+                            <input type="text" id="in_body_width" value="450px" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">정보 섹션 간격</label>
-                            <input type="text" id="in_section_gap" value="5px" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border" placeholder="예: 15px">
+                            <label class="block text-xs font-bold text-gray-500 uppercase">레드바 하단 간격</label>
+                            <input type="text" id="in_top_gap" value="20px" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase">로고 이미지 크기</label>
+                            <input type="text" id="in_logo_height" value="48px" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase">정보 섹션 간격</label>
+                            <input type="text" id="in_section_gap" value="15px" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border text-sm">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 결과물 미리보기 섹션 (Sticky 적용 영역) -->
+            <!-- 결과물 미리보기 섹션 (Sticky 고정) -->
             <div class="sticky-preview flex flex-col space-y-4">
                 <div class="bg-gray-800 text-white p-2 rounded text-sm font-mono flex justify-between items-center shadow-md">
                     <span>실시간 미리보기</span>
-                    <span class="text-[10px] text-gray-400">FOLLOWING VIEW ACTIVE</span>
+                    <span class="text-[10px] text-gray-400 uppercase">Auto-Following View</span>
                 </div>
                 <div id="capture_area" class="preview-container p-6 bg-white overflow-auto border min-h-[400px]">
-                    <!-- 복사될 실제 서명 HTML 영역 시작 -->
                     <div id="signature_preview">
                         <!-- 본문 컨테이너 -->
                         <div id="sig_body" style="width: 450px; font-family: 'Malgun Gothic', '맑은 고딕', sans-serif; color: #333; background-color: #ffffff; font-size: 10pt; line-height: 150%; margin: 0 auto;">
@@ -166,7 +161,6 @@
                                 </div>
                             </div>
 
-                            <!-- 나머지 정보 영역 -->
                             <div id="out_lower_info_container" style="padding: 0 25px 20px 25px;">
                                 <div id="out_gap_highlight_group">
                                     <div id="out_section_gap" style="margin-bottom: 15px;">
@@ -196,11 +190,12 @@
                     </div>
                 </div>
 
+                <!-- 하단 액션 버튼 -->
                 <div class="flex space-x-2">
                     <button id="btn_copy" onclick="copyCodeToClipboard()" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded shadow-lg transition active:scale-95">
                         서명 HTML 코드 복사
                     </button>
-                    <button onclick="resetForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-6 rounded transition">
+                    <button onclick="resetForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-6 rounded transition active:scale-95">
                         초기화
                     </button>
                 </div>
@@ -233,7 +228,7 @@
             'section_gap': 'out_gap_highlight_group'
         };
 
-        // 로컬 저장소에 정보 저장하는 함수
+        // 로컬 저장소에 정보 저장
         function saveToLocal() {
             const data = {};
             inputs.forEach(id => {
@@ -244,7 +239,7 @@
             showMsg('정보가 브라우저에 저장되었습니다!', 'success');
         }
 
-        // 저장된 정보를 불러오는 함수
+        // 저장된 정보 불러오기
         function loadFromLocal() {
             const saved = localStorage.getItem('shinshinsa_saved_profile');
             if (saved) {
@@ -264,29 +259,20 @@
                 if (!inputEl) return;
                 const val = inputEl.value;
                 const out = document.getElementById('out_' + id);
-                
                 const formattedVal = val.replace(/ /g, '\u00A0');
                 
                 if (id === 'bar_width') {
-                    const container = document.getElementById('grey_bar_container');
-                    const bar = document.getElementById('grey_bar_solid');
-                    container.style.width = val;
-                    bar.style.width = '100%';
+                    document.getElementById('grey_bar_container').style.width = val;
                 } else if (id === 'body_width') {
-                    const body = document.getElementById('sig_body');
-                    body.style.width = val;
+                    document.getElementById('sig_body').style.width = val;
                 } else if (id === 'grey_bar_height') {
-                    const bar = document.getElementById('grey_bar_solid');
-                    bar.style.height = val;
+                    document.getElementById('grey_bar_solid').style.height = val;
                 } else if (id === 'top_gap') {
-                    const info = document.getElementById('out_name_ko_container');
-                    info.style.paddingTop = val;
+                    document.getElementById('out_name_ko_container').style.paddingTop = val;
                 } else if (id === 'logo_height') {
-                    const img = document.getElementById('out_logo_img');
-                    img.style.maxHeight = val;
+                    document.getElementById('out_logo_img').style.maxHeight = val;
                 } else if (id === 'section_gap') {
-                    const gapEl = document.getElementById('out_section_gap');
-                    gapEl.style.marginBottom = val;
+                    document.getElementById('out_section_gap').style.marginBottom = val;
                 } else if (id === 'email') {
                     if(out) out.innerText = val;
                     const link = document.getElementById('out_email_link');
@@ -300,7 +286,6 @@
         function highlightPreview(inputId, isActive) {
             const previewId = map[inputId] || 'out_' + inputId;
             const target = document.getElementById(previewId);
-            
             if (target) {
                 if (isActive) {
                     target.classList.add('highlight-active');
@@ -322,24 +307,17 @@
         function copyCodeToClipboard() {
             const highlighted = document.querySelectorAll('.highlight-active');
             highlighted.forEach(el => el.classList.remove('highlight-active'));
-
             const htmlCode = document.getElementById('signature_preview').innerHTML;
             const textarea = document.createElement('textarea');
             textarea.value = htmlCode.trim();
             document.body.appendChild(textarea);
             textarea.select();
-            
             try {
-                const successful = document.execCommand('copy');
-                if (successful) {
-                    showMsg('서명 HTML 코드가 복사되었습니다!', 'success');
-                } else {
-                    showMsg('복사에 실패했습니다.', 'error');
-                }
+                document.execCommand('copy');
+                showMsg('서명 HTML 코드가 복사되었습니다!', 'success');
             } catch (err) {
-                showMsg('에러가 발생했습니다.', 'error');
+                showMsg('복사에 실패했습니다.', 'error');
             }
-            
             document.body.removeChild(textarea);
         }
 
@@ -350,8 +328,13 @@
             setTimeout(() => { msg.innerText = ''; }, 3000);
         }
 
+        // [수정된 원복 로직] 
+        // 로컬 저장소를 먼저 삭제한 후 새로고침하여 HTML 기본값으로 원복시킵니다.
         function resetForm() {
-            if(confirm('내용을 초기화할까요? (저장된 정보는 사라지지 않습니다)')) {
+            if(confirm('모든 내용을 초기 설정(기본 템플릿)으로 원복하시겠습니까?\n브라우저에 저장된 정보도 함께 삭제됩니다.')) {
+                // 1. 브라우저 저장소 데이터 삭제
+                localStorage.removeItem('shinshinsa_saved_profile');
+                // 2. 페이지 새로고침 (HTML에 정의된 초기 value값이 로드됨)
                 location.reload();
             }
         }
@@ -363,4 +346,3 @@
     </script>
 </body>
 </html>
-
